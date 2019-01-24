@@ -1,11 +1,11 @@
 <template>
       <ul class="collection col m8 offset-m2">
-      
-          <task v-for="task in tasks" 
-          :key="task.id" :task="task"
-          @refreshTasks="getAllTasks"
+          <task 
+            v-for="task in tasks" 
+            :key="task.id" 
+            :task="task"
+            @refreshTasks="getAllTasks"
           ></task>
-      
     </ul>
 </template>
 
@@ -20,6 +20,7 @@ export default {
     },
     mounted() {
         this.getAllTasks();
+        EventHub.$on('refreshTasks', this.getAllTasks);
     },
     methods: {
         getAllTasks () {

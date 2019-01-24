@@ -17,6 +17,30 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('users', function () {
+    return \App\User::all();
+});
+
+Route::post('task', function (Request $request) {
+
+    $request->validate([
+       'title' => 'required|min:2',
+    ]);
+
+    $task = new \App\Task();
+    $task->title = $request->title;
+    $task->description = $request->description ?? null;
+    $task->due = $request->due ?? null;
+
+    $task->save();
+
+    $task->users()->attach($request->users);
+
+    return response(['status' => 200,
+        "content" => "Task was created succesfully"],
+        200);
+
+});
 
 Route::get('tasks', function () {
     $tasks = \App\Task::with('users')
